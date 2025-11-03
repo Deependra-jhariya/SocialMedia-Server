@@ -1,4 +1,6 @@
 import mongoose from "mongoose";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 const userSchema = new mongoose.Schema(
   {
@@ -36,8 +38,12 @@ const userSchema = new mongoose.Schema(
       type: String,
     },
     about_you: { type: String },
-    profile_picture: { type: String },
-    introVideo: { type: String },
+    // ✅ Image and video should be strings, not arrays or objects
+    profile_picture: { type: String, required: false },
+    introVideo: { type: String, required: false },
+    resetPasswordOTP: { type: String },
+    resetPasswordExpires: { type: Date },
+    isOTPVerified: { type: Boolean, default: false },
   },
   { timestamps: true }
 );
@@ -62,7 +68,7 @@ userSchema.methods.generateAccessToken = function () {
       _id: this._id,
       email: this.email,
       userName: this.userName,
-      fullName: this.fullName,
+      name: this.name,
     },
     process.env.ACCESS_TOKEN_SECRET,
     { expiresIn: process.env.ACCESS_TOKEN_EXPIRY }

@@ -1,7 +1,12 @@
-import express, { Router } from "express";
+import express from "express";
 import { upload } from "../../middlewares/multer.middleware.js";
-import { signUp } from "../../controllers/auth/user.controller.js";
-const router = Router();
+import {
+  forget_Password,
+  signIn,
+  signUp,
+  verify_OTP,
+} from "../../controllers/auth/user.controller.js";
+const router = express.Router();
 
 router.post(
   "/signup",
@@ -11,4 +16,8 @@ router.post(
   ]),
   signUp
 );
+
+router.post("/signin", signIn);
+router.post("/forget-password", forget_Password);
+router.post("/verify-otp", verify_OTP);
 export default router;
