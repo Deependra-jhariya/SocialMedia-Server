@@ -1,5 +1,7 @@
 import nodemailer from "nodemailer";
 import Brevo from "@getbrevo/brevo";
+
+
 // export const sendEmail = async ({ email, subject, message }) => {
 //   try {
 //     const transporter = nodemailer.createTransport({
@@ -25,6 +27,8 @@ import Brevo from "@getbrevo/brevo";
 //     throw new Error("Failed to send email");
 //   }
 // };
+
+
 
 export const sendEmail = async ({ email, subject, message }) => {
   try {

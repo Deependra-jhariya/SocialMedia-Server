@@ -18,7 +18,11 @@ app.use(cookieParser());
 
 // routes
 import userRoutes from "./routes/auth/user.routes.js";
+import followRoutes from "./routes/followToggle/follow.routes.js";
+import postRoutes from "./routes/post/post.route.js";
 
 app.use("/api/v1/auth", userRoutes);
+app.use("/api/v1/follow", followRoutes);
+app.use("/api/v1/post", postRoutes);
 
 export { app };

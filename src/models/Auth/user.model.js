@@ -38,12 +38,18 @@ const userSchema = new mongoose.Schema(
       type: String,
     },
     about_you: { type: String },
+
     // ✅ Image and video should be strings, not arrays or objects
     profile_picture: { type: String, required: false },
     introVideo: { type: String, required: false },
     resetPasswordOTP: { type: String },
     resetPasswordExpires: { type: Date },
     isOTPVerified: { type: Boolean, default: false },
+
+    // 👇 Relationships
+    followers: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+    following: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+    
   },
   { timestamps: true }
 );
