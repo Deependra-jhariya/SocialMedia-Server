@@ -3,6 +3,7 @@ import { upload } from "../../middlewares/multer.middleware.js";
 import {
   editProfile,
   forget_Password,
+  getProfile,
   reset_Password,
   signIn,
   signUp,
@@ -32,5 +33,6 @@ router.post(
   verifyJwt,
   editProfile
 );
+router.get("/profile",verifyJwt,getProfile)
 
 export default router;

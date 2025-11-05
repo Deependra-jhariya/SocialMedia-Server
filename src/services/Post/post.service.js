@@ -1,5 +1,5 @@
 import { Post } from "../../models/Post/post.model.js";
-import { ApiError, uploadCloudinary } from "../../utils/index.js";
+import { ApiError, asyncHandler, uploadCloudinary } from "../../utils/index.js";
 
 const createPostService = async (userId, caption, imageFile) => {
   /*
@@ -9,7 +9,7 @@ const createPostService = async (userId, caption, imageFile) => {
     3. uplaod image on cloudinary
     4. create a post 
     5. return a response
-    */                                                                                                                                                          
+    */
   // Upload to cloudinary
 
   let uploadedImage = null;
@@ -31,5 +31,6 @@ const createPostService = async (userId, caption, imageFile) => {
 
   return newpost;
 };
+
 
 export { createPostService };

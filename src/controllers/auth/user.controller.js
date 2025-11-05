@@ -299,7 +299,6 @@ note:-
 });
 
 // Update profile
-
 const editProfile = asyncHandler(async (req, res) => {
   /*
 Note:- 
@@ -353,6 +352,20 @@ Note:-
     .json(new ApiResponse(200, updatedUser, "User updated successfully."));
 });
 
+// GET PROFILE
+
+const getProfile = asyncHandler(async (req, res) => {
+  const userId = req.user._id;
+
+  const profile = await User.findById(userId);
+
+  if (!profile) throw new ApiError(400, "Profile not found.");
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, profile, "Profile fetch successfully."));
+});
+
 export {
   signUp,
   signIn,
@@ -360,4 +373,5 @@ export {
   verify_OTP,
   reset_Password,
   editProfile,
+  getProfile,
 };
