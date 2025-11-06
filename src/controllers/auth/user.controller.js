@@ -298,6 +298,36 @@ note:-
     .json(new ApiResponse(200, {}, "Password reset successfully."));
 });
 
+// CHANGE PASSWORD
+
+const change_Password = asyncHandler(async (req, res) => {
+  const { oldPassword, newPassword, confirmPassword } = req.body;
+
+  const userId = req.user._id;
+
+  if (!oldPassword || !newPassword || !confirmPassword) {
+    throw new ApiError(404, "All field are required.");
+  }
+  console.log("userId", userId);
+  const user = await User.findOne(userId);
+  if (!user) throw new ApiError(400, "User not found");
+
+  const isMatch = await bcrypt.compare(oldPassword, user.password);
+  if (!isMatch) throw new ApiError(400, "Old password is not matched.");
+
+  if (newPassword !== confirmPassword)
+    throw new ApiError(400, "New password and Confirm password do not match.");
+
+  // const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+  user.password = newPassword;
+  await user.save();
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, {}, "Password changes successfully."));
+});
+
 // Update profile
 const editProfile = asyncHandler(async (req, res) => {
   /*
@@ -366,6 +396,73 @@ const getProfile = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, profile, "Profile fetch successfully."));
 });
 
+const blockUser = asyncHandler(async (req, res) => {
+  /*
+  Note:- 
+  1. user Id from req.user._id
+  2. targetUserId  from pararam
+  3. check validation for useId and tragetId
+  4. find user from both side user and targetId.
+  5. if not find the user .
+  6. Remove any follow relationships (like Instagram)
+  7. add to blocl list 
+  8 then save user and targetUser 
+  9. return response
+  */
+
+  const userId = req.user._id;
+  const targetUserId = req.params;
+
+  if (userId.toString() == targetUserId.toString())
+    throw new ApiError(400, "You can not block yourself.");
+
+  if (!targetUserId) throw new ApiError(404, "Target user id is required");
+
+  const user = await User.findById(userId);
+  const targetUSer = await User.findById(targetUserId);
+
+  if (!user || !targetUSer) throw new ApiError(400, "User not found.");
+
+  // If user already block
+  if (user.blockedUsers.includes(targetUserId))
+    throw new ApiError(400, "User already blocked.");
+
+  // remove from any follow relation
+
+  user.following = user.following.filter(
+    (id) => id.toString() !== targetUserId.toString()
+  );
+  user.followers = user.followers.filter(
+    (id) => id.toString() !== targetUserId.toString()
+  );
+
+  targetUSer.following = targetUSer.following.filter(
+    (id) => id.toString !== userId.toString()
+  );
+  targetUSer.followers = targetUSer.followers.filter(
+    (id) => id.toString !== userId.toString()
+  );
+
+  user.blockedUsers.push(targetUserId);
+
+  await user.save();
+  await targetUSer.save();
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, targetUSer, "User blocked successfully."));
+});
+
+const unBlockUser = asyncHandler(async (req, res) => {
+  const userId = req.user._id;
+  const targetUserId = req.params;
+
+  if (!targetUserId) throw new ApiError(404, "Target user is required.");
+
+  const user = await User.findById(userId);
+  if (!user) throw new ApiError(400, "User not found.");
+});
+
 export {
   signUp,
   signIn,
@@ -374,4 +471,5 @@ export {
   reset_Password,
   editProfile,
   getProfile,
+  change_Password,
 };

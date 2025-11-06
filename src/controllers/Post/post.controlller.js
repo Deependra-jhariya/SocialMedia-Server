@@ -153,7 +153,7 @@ const getPostById = asyncHandler(async (req, res) => {
 const deletePost = asyncHandler(async (req, res) => {
   const { postId } = req.params;
   const userId = req.user._id;
-  if (!postId) throw new ApiError(404, "Post id i required.");
+  if (!postId) throw new ApiError(404, "Post id is required.");
   const post = await Post.findById(postId);
   if (!post) throw new ApiError(404, "Post not found.");
 

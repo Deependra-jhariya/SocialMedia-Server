@@ -1,6 +1,7 @@
 import express from "express";
 import { upload } from "../../middlewares/multer.middleware.js";
 import {
+  change_Password,
   editProfile,
   forget_Password,
   getProfile,
@@ -25,6 +26,8 @@ router.post("/signin", signIn);
 router.post("/forget-password", forget_Password);
 router.post("/verify-otp", verify_OTP);
 router.post("/reset-password", reset_Password);
+router.post("/change-password",verifyJwt, change_Password);
+
 router.post(
   "/edit-profile",
   upload.fields([
