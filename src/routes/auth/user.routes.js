@@ -1,6 +1,7 @@
 import express from "express";
 import { upload } from "../../middlewares/multer.middleware.js";
 import {
+  blockUser,
   change_Password,
   editProfile,
   forget_Password,
@@ -8,6 +9,7 @@ import {
   reset_Password,
   signIn,
   signUp,
+  unBlockUser,
   verify_OTP,
 } from "../../controllers/auth/user.controller.js";
 import { verifyJwt } from "../../middlewares/auth.middleware.js";
@@ -36,6 +38,8 @@ router.post(
   verifyJwt,
   editProfile
 );
-router.get("/profile",verifyJwt,getProfile)
+router.get("/profile/:userId",getProfile)
+router.post("/block/:id",verifyJwt,blockUser)
+router.post("/unblock/:id",verifyJwt,unBlockUser)
 
 export default router;

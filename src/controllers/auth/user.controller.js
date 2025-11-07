@@ -385,8 +385,9 @@ Note:-
 // GET PROFILE
 
 const getProfile = asyncHandler(async (req, res) => {
-  const userId = req.user._id;
+  const {userId} = req.params;
 
+  console.log("userId",userId)
   const profile = await User.findById(userId);
 
   if (!profile) throw new ApiError(400, "Profile not found.");
@@ -411,7 +412,7 @@ const blockUser = asyncHandler(async (req, res) => {
   */
 
   const userId = req.user._id;
-  const targetUserId = req.params;
+  const targetUserId = req.params.id;
 
   if (userId.toString() == targetUserId.toString())
     throw new ApiError(400, "You can not block yourself.");
@@ -455,12 +456,25 @@ const blockUser = asyncHandler(async (req, res) => {
 
 const unBlockUser = asyncHandler(async (req, res) => {
   const userId = req.user._id;
-  const targetUserId = req.params;
+  const targetUserId = req.params.id;
 
   if (!targetUserId) throw new ApiError(404, "Target user is required.");
 
   const user = await User.findById(userId);
   if (!user) throw new ApiError(400, "User not found.");
+
+  const targetUser = await User.findById(targetUserId);
+  if (!targetUser) throw new ApiError(404, "target user not found.");
+  // remove user from blockList
+  user.blockedUsers = user.blockedUsers.filter(
+    (id) => id.toString() !== targetUserId.toString()
+  );
+
+  await user.save();
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, targetUser, "user unblock successfully."));
 });
 
 export {
@@ -472,4 +486,6 @@ export {
   editProfile,
   getProfile,
   change_Password,
+  blockUser,
+  unBlockUser,
 };
