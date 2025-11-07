@@ -3,10 +3,10 @@
   "version": "1.0.0",
   "description": "This is social media application .",
   "type": "module",
-  "main": "src/index.js",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon src/index.js"
+    "start": "nodemon src/index"
   },
   "repository": {
     "type": "git",
