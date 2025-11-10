@@ -175,7 +175,9 @@ const signIn = asyncHandler(async (req, res) => {
     .json(
       new ApiResponse(
         200,
-        { user, accessToken, refreshToken },
+        user,
+        accessToken,
+        refreshToken,
         "Login Successfully."
       )
     );
@@ -385,9 +387,9 @@ Note:-
 // GET PROFILE
 
 const getProfile = asyncHandler(async (req, res) => {
-  const {userId} = req.params;
+  const { userId } = req.params;
 
-  console.log("userId",userId)
+  console.log("userId", userId);
   const profile = await User.findById(userId);
 
   if (!profile) throw new ApiError(400, "Profile not found.");
